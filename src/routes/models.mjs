@@ -55,7 +55,7 @@ router.get("/:id", async (req, res) => {
                 ({ name, template, fields: fields.map(({ name, value, x1, y1, x2, y2 }) =>
                     ({ name, value, x1, y1, x2, y2 })), format })));
         const user = await Users.findOne({ username: "needlex" }).exec();
-        result.fields.forEach(elem => {
+        results.fields.forEach(elem => {
             results.fields.value = user[elem.name];
         });
         res.status(200).json(result);
