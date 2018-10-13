@@ -11,13 +11,14 @@ console.log(mongoose.connection.readyState);
 const Users = mongoose.model('User', require('./mongoose/Users.js'));
 const Template = mongoose.model('Template', require('./mongoose/Template.js'));
 
-Users.findOne({ username: "needlex" }, (err, usr) => {
-    if (err) { return console.error(err); }
-    usr.testfield = "repgergerpgorpokr";
-    console.log(usr);
-    usr.save();
-    console.log(usr);
-});
+// (async () => {
+//     try {
+//         const user = await Users.updateOne({ username: "needlex" }, { password: "codeurfou" }).exec();
+//         console.log(await Users.findOne({ username: "needlex" }).exec());
+//     } catch (err) {
+//         console.error(err);
+//     }
+// })();
 
 // Template.create({name: "test", template: "iejfiozefjozefji", format: "jpg", fields: [ { name: "testfield", x1: 10, y1: 10, x2: 40, y2: 40 } ],})
 
