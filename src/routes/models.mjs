@@ -49,8 +49,11 @@ router.post("/:name", async (req, res) => {
 
 router.get("/:name", async (req, res) => {
     try {
-        const result = await Templates.findOne({ name: req.params.name }).exec();
-        delete result._id;
+        ;
+        const result = await (async () => {
+            const { name, template, fields, format } = await Templates.findOne({ name: req.params.name }).exec();
+            return { name, template, fields, format };
+        })();
         const user = await Users.findOne({ username: "needlex" }).exec();
         result.fields.forEach(elem => {
             result.fields.value = user[elem.name];
@@ -63,8 +66,10 @@ router.get("/:name", async (req, res) => {
 
 router.get("/", async (req, res) => {
     try {
-        const results = await Templates.find({}).exec();
-        delete result._id;
+        const results = await (async () => {
+            const { name, template, fields, format } = await Templates.find({}).exec();
+            return { name, template, fields, format };
+        })();
         res.status(200).json({ message: "OK", data: results });
     } catch (err) {
         res.status(500).json({ message: err });
