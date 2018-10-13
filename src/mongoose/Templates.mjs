@@ -1,6 +1,6 @@
 import Mongoose from "mongoose";
 
-export const Templates = Mongoose.model("Template", new Mongoose.Schema({
+export const Templates = Mongoose.model("templates", new Mongoose.Schema({
     name: String,
     path: String,
     format: String,

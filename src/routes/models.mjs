@@ -17,7 +17,7 @@ router.put("/:name", async (req, res) => {
     try {
         await Promise.all(
             Object.entries(data).map(([key, val]) =>
-                Data.updateOne({ username: "needlex" }, { [key]: val }).exec()));
+                Data.updateOne({  }, { [key]: val }).exec()));
         res.status(400).json({ message: "OK" });
     } catch (err) {
         res.status(400).json({ message: err });
@@ -54,7 +54,7 @@ router.get("/:id", async (req, res) => {
             .then(({ name, template, fields, format }) =>
                 ({ name, template, fields: fields.map(({ name, value }) =>
                     ({ name, value })), format }));
-        const user = await Data.findOne({ username: "needlex" }).exec();
+        const user = await Data.findOne({  }).exec();
         results.fields.forEach(elem => { results.fields.value = user[elem.name]; });
         console.log(results);
         res.status(200).json(results);

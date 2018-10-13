@@ -2,7 +2,7 @@ import express from "express";
 import jimp from "jimp";
 import path from "path";
 import Templates from "../mongoose/Templates.mjs";
-import Users from "../mongoose/Users.mjs";
+import Data from "../mongoose/Data.mjs";
 import config from "../config.mjs"
 
 const dirname = "static";
@@ -37,7 +37,7 @@ router.get("/:template", async (req, res) => {
 
     try {
         const tmplt = await Templates.findOne({ template }).exec();
-        const usr = await Users.findOne({ username: "needlex" }).exec();
+        const usr = await Data.findOne({  }).exec();
         const data = {};
 
         tmplt.fields.forEach(({ name }) => {

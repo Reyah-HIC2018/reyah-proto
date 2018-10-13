@@ -1,6 +1,6 @@
 import Mongoose from "mongoose";
 
-export const Users = Mongoose.model("User", new Mongoose.Schema({
+export const Data = Mongoose.model("data", new Mongoose.Schema({
     username: String,
     password: String,
     firstName: String,
@@ -8,4 +8,4 @@ export const Users = Mongoose.model("User", new Mongoose.Schema({
     updated: { type: Date, default: Date.now },
 }, { strict: false }));
 
-export default Users;
+export default Data;
