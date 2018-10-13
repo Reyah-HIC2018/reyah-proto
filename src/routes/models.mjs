@@ -41,7 +41,7 @@ router.get('/:name', async (req, res) => {
         const found = await Templates.findOne({ name: req.params.name }).exec();
         const result = {
             name: found.name,
-            Templates: found.Templates,
+            path: found.path,
             format: found.format,
             fields: found.fields
         }
@@ -60,7 +60,7 @@ router.get('/', async (req, res) => {
         const found = await Templates.find({}).exec();
         const results = found.map(elem => ({
             name: elem.name,
-            Templates: elem.Templates,
+            path: elem.path,
             format: elem.format,
         }));
         res.status(200).json({ message: "OK", data: results });
