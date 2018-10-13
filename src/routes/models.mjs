@@ -41,8 +41,8 @@ router.post("/:name", async (req, res) => {
             } while (files.includes(path));
             return path;
         })();
-        await write_file(`static/${path}`, template);
-        await Templates.create({ name, path, fields });
+        await write_file(`static/${path}`, Buffer.from(template.split(",")[1], "base64"));
+        await Templates.create({ name, path, fields, format: "jpg" });
         res.status(200).json({ message: "OK" });
     } catch (err) {
         res.status(500).json({ message: err });
