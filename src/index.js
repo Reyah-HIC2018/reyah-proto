@@ -55,9 +55,9 @@ const template_model = {
 }
 
 const data_model = [
-    {field: "prénom de l'enfant", value: "Cédric"},
+    {field: "prénom de l'enfant", value: "Benjamin"},
     {field: "date de naissance de l'enfant", value: "16/01/1998"},
-    {field: "groupe sanguin de l'enfant", value: "0+"},
+    {field: "groupe sanguin de l'enfant", value: "A+"},
     {field: "pédiatre de l'enfant", value: "Dr. Industry"},
     {field: "téléphone du pédiatre", value: "03 88 41 86 95"},
     {field: "assurance maladie et accident", value: "LMDE"},
