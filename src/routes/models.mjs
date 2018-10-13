@@ -1,3 +1,5 @@
+"use strict";
+
 import express from "express";
 import { writeFile, readdir } from "fs";
 import { promisify } from "util";
@@ -39,8 +41,8 @@ router.post("/:name", async (req, res) => {
             } while (files.includes(path));
             return path;
         })();
-        await write_file(`static/${path}`, template);
-        await Templates.create({ name, path, fields });
+        await write_file(`static/${path}`, Buffer.from(template.split(",")[1], "base64"));
+        await Templates.create({ name, path, fields, format: "jpg" });
         res.status(200).json({ message: "OK" });
     } catch (err) {
         res.status(500).json({ message: err });
@@ -51,15 +53,15 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
         const results = await Templates.findById(id).exec()
-            .then(arr => arr.map(({ name, template, fields, format }) =>
-                ({ name, template, fields: fields.map(({ name, value, x1, y1, x2, y2 }) =>
-                    ({ name, value, x1, y1, x2, y2 })), format })));
+            .then(({ name, template, fields, format }) =>
+                ({ name, template, fields: fields.map(({ name, value }) =>
+                    ({ name, value })), format }));
         const user = await Users.findOne({ username: "needlex" }).exec();
-        result.fields.forEach(elem => {
-            result.fields.value = user[elem.name];
-        });
-        res.status(200).json(result);
+        results.fields.forEach(elem => { results.fields.value = user[elem.name]; });
+        console.log(results);
+        res.status(200).json(results);
     } catch (err) {
+        console.error(err);
         res.status(404).json({ message: "Resource not found" });
     }
 });
@@ -67,9 +69,9 @@ router.get("/:id", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const data = await Templates.find({}).exec()
-            .then(arr => arr.map(({ name, template, format }) =>
-                ({ name, template, format })));
-        res.status(200).json({ message: "OK", data });
+            .then(arr => arr.map(({ name, template, format, _id }) =>
+                ({ name, template, format, id: _id })));
+        res.status(200).json({ data });
     } catch (err) {
         res.status(500).json({ message: err });
     }
