@@ -67,8 +67,8 @@ router.get("/:id", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const data = await Templates.find({}).exec()
-            .then(arr => arr.map(({ name, template, format }) =>
-                ({ name, template, format })));
+            .then(arr => arr.map(({ name, template, format, _id }) =>
+                ({ name, template, format, id: _id })));
         res.status(200).json({ message: "OK", data });
     } catch (err) {
         res.status(500).json({ message: err });
