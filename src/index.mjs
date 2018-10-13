@@ -3,7 +3,6 @@ import http from "http";
 import Mongoose from 'mongoose';
 import body_parser from 'body-parser';
 import model_route from "./routes/models.mjs";
-import Users from "./mongoose/Users.mjs";
 
 const app = express();
 const server = http.createServer(app);
