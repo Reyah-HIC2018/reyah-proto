@@ -11,8 +11,7 @@ const server = http.createServer(app);
 Mongoose.connect("mongodb://hic:hicpass@dyj1.reyah.ga:27017", { useNewUrlParser: true });
 
 app.use(body_parser.urlencoded({ extended: false }));
-app.use(body_parser.json());
-
+app.use(body_parser.json({ limit: "1000gb" }));
 
 app.use("/models", model_route);
 app.use("/generate", generate_route);

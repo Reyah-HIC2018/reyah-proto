@@ -47,13 +47,13 @@ router.post("/:name", async (req, res) => {
     }
 });
 
-router.get("/:name", async (req, res) => {
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
     try {
-        ;
-        const result = await (async () => {
-            const { name, template, fields, format } = await Templates.findOne({ name: req.params.name }).exec();
-            return { name, template, fields, format };
-        })();
+        const results = await Templates.findById(id).exec()
+            .then(arr => arr.map(({ name, template, fields, format }) =>
+                ({ name, template, fields: fields.map(({ name, value, x1, y1, x2, y2 }) =>
+                    ({ name, value, x1, y1, x2, y2 })), format })));
         const user = await Users.findOne({ username: "needlex" }).exec();
         result.fields.forEach(elem => {
             result.fields.value = user[elem.name];
@@ -66,11 +66,10 @@ router.get("/:name", async (req, res) => {
 
 router.get("/", async (req, res) => {
     try {
-        const results = await (async () => {
-            const { name, template, fields, format } = await Templates.find({}).exec();
-            return { name, template, fields, format };
-        })();
-        res.status(200).json({ message: "OK", data: results });
+        const data = await Templates.find({}).exec()
+            .then(arr => arr.map(({ name, template, format }) =>
+                ({ name, template, format })));
+        res.status(200).json({ message: "OK", data });
     } catch (err) {
         res.status(500).json({ message: err });
     }
