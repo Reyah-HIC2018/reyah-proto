@@ -11,14 +11,14 @@ console.log(mongoose.connection.readyState);
 const Users = mongoose.model('User', require('./mongoose/Users.js'));
 const Template = mongoose.model('Template', require('./mongoose/Template.js'));
 
-// (async () => {
-//     try {
-//         const user = await Users.updateOne({ username: "needlex" }, { password: "codeurfou" }).exec();
-//         console.log(await Users.findOne({ username: "needlex" }).exec());
-//     } catch (err) {
-//         console.error(err);
-//     }
-// })();
+(async () => {
+    try {
+        const user = await Users.updateOne({ username: "needlex" }, { password: "codeurfou" }).exec();
+        console.log(await Users.findOne({ username: "needlex" }).exec());
+    } catch (err) {
+        console.error(err);
+    }
+})();
 
 // Template.create({name: "test", template: "iejfiozefjozefji", format: "jpg", fields: [ { name: "testfield", x1: 10, y1: 10, x2: 40, y2: 40 } ],})
 
@@ -28,7 +28,11 @@ router.put('/models/:name', async (req, res) => {
     const { data } = req.body;
     try {
         const user = await Users.findOne({ username: "needlex" }).exec();
-        Object.assign(user, data);
+        for (const [key, val] of Object.entries(data)) {
+            if (Users.schema.path(key) == undefined)
+                Users.schema.add({ key: 'string' });
+            user[key] = val;
+        }
         user.save();
         res.status(400).json({ message: "OK" });
     } catch (err) {
