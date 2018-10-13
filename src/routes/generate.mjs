@@ -1,29 +1,28 @@
 import express from "express";
-import jimp from "jimp";
-import path from "path";
-import Templates from "../mongoose/Templates.mjs";
 import Data from "../mongoose/Data.mjs";
-import config from "../config.mjs"
+import Templates from "../mongoose/Templates.mjs";
+import path from "path";
 
-const dirname = "static";
+const dirname = 'static'
 const router = express.Router();
 
 async function imageFill(template, data, output) {
     return new Promise((resolve, reject) => {
-        jimp.read(`${config.templates_folder}/${template.path}`, async (err, file) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            const font = await jimp.loadFont(jimp.FONT_SANS_32_WHITE);
-            for (const field of template.metadata) {
-                const { value } = data.find(({ field }) => field == field.name);
-                if (value)
+        Jimp.read(`${config.templates_folder}/${template.path}`, async (err, file) => {
+            if (err) 
+                throw err;
+            font = await Jimp.loadFont(config.font);
+            for (let field of template.metadata) {
+                let profile_elem = data.find((metadata) => {
+                    return metadata.field == field.name;
+                });
+                if (profile_elem) {
                     file.print(font, field.x1, field.y1, {
-                        text: value,
-                        alignmentX: jimp.HORIZONTAL_ALIGN_LEFT,
-                        alignmentY: jimp.VERTICAL_ALIGN_BOTTOM
-                    });
+                        text: profile_elem.value,
+                        alignmentX: Jimp.HORIZONTAL_ALIGN_LEFT,
+                        alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM
+                      });
+                }
             }
             file.write(output);
             resolve();
@@ -32,26 +31,27 @@ async function imageFill(template, data, output) {
 }
 
 
-router.get("/:template", async (req, res) => {
-    const { template } = req.body;
+router.get('/:id', async (req, res) => {
+    const {template} = req.body;
 
     try {
-        const tmplt = await Templates.findOne({ template }).exec();
-        const usr = await Data.findOne({  }).exec();
+        const tmplt = await Templates.findById(id).exec();
+        const usr = await Data.find({}).exec();
         const data = {};
-
-        tmplt.fields.forEach(({ name }) => {
-            if (!usr[name])
-                return res.status(400).json({ message: "Missing fields" });
-            data[name] = usr[name];
+        
+        tmplt.fields.forEach((elem) => {
+            if (!usr[elem.name])
+                return res.status(400).json({message: "Missing fields" })
+            data[elem.name] = usr[elem.name];
         });
 
-        imageFill(tmplt, data, path.join(dirname, tmplt.name + "_filled.jpg"));
-        res.redirect(path.join(dirname, tmplt.name + "_filled.jpg"));
-    } catch (err) {
-        res.status(404).json({ message: "Unknown model" });
+        imageFill(tmplt, data, path.join(dirname, tmplt.name + '_filled.jpg')); 
+        res.redirect(path.join(dirname, tmplt.name + '_filled.jpg'));
+    
+    } catch {
+        res.status(404).json({message: "Unknown model"})
     }
-
+    
 });
 
 export default router;
