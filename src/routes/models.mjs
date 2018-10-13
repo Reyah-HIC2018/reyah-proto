@@ -1,3 +1,5 @@
+"use strict";
+
 import express from "express";
 import { writeFile, readdir } from "fs";
 import { promisify } from "util";
@@ -51,15 +53,17 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
         const results = await Templates.findById(id).exec()
-            .then(arr => arr.map(({ name, template, fields, format }) =>
+            .then(({ name, template, fields, format }) =>
                 ({ name, template, fields: fields.map(({ name, value, x1, y1, x2, y2 }) =>
-                    ({ name, value, x1, y1, x2, y2 })), format })));
+                    ({ name, value, x1, y1, x2, y2 })), format }));
         const user = await Users.findOne({ username: "needlex" }).exec();
         results.fields.forEach(elem => {
             results.fields.value = user[elem.name];
         });
-        res.status(200).json(result);
+        console.log(results);
+        res.status(200).json(results);
     } catch (err) {
+        console.error(err);
         res.status(404).json({ message: "Resource not found" });
     }
 });
