@@ -56,7 +56,7 @@ router.get("/:id", async (req, res) => {
                     ({ name, value, x1, y1, x2, y2 })), format })));
         const user = await Users.findOne({ username: "needlex" }).exec();
         result.fields.forEach(elem => {
-            result.fields.value = user[elem.name];
+            results.fields.value = user[elem.name];
         });
         res.status(200).json(result);
     } catch (err) {
@@ -69,7 +69,7 @@ router.get("/", async (req, res) => {
         const data = await Templates.find({}).exec()
             .then(arr => arr.map(({ name, template, format, _id }) =>
                 ({ name, template, format, id: _id })));
-        res.status(200).json({ message: "OK", data });
+        res.status(200).json({ data });
     } catch (err) {
         res.status(500).json({ message: err });
     }
