@@ -24,8 +24,22 @@ const Template = mongoose.model('Template', require('./mongoose/Template.js'));
 
 const router = express.Router();
 
-router.post('/model/:name', async (req, res) => {
-    if (!req.body.template || !req.body.metadata) { return res.status(400).json({ message: "Missing data" }); }
+router.put('/models/:name', async (req, res) => {
+    const data = req.body.data;
+    try {
+        const user = await Users.findOne({ username: "needlex" }).exec();
+        Object.assign(user, data);
+        user.save();
+        res.status(400).json({ message: "OK" });
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+router.post('/models/:name', async (req, res) => {
+    const { template, metadata } = req.body;
+    if (!template || !metadata)
+        return res.status(400).json({ message: "Missing data" });
     try {
         await Template.create({
             name: req.params.name,
