@@ -50,13 +50,7 @@ router.post('/:name', async (req, res) => {
 
 router.get('/:name', async (req, res) => {
     try {
-        const found = await Templates.findOne({ name: req.params.name }).exec();
-        const result = {
-            name: found.name,
-            template: found.template,
-            format: found.format,
-            fields: found.fields
-        }
+        const result = await Templates.findOne({ name: req.params.name }).exec();
         const user = await Users.findOne({ username: 'needlex' }).exec();
         result.fields.forEach(elem => {
             result.fields.value = user[elem.name];
@@ -69,12 +63,7 @@ router.get('/:name', async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        const found = await Templates.find({}).exec();
-        const results = found.map(elem => ({
-            name: elem.name,
-            Templates: elem.Templates,
-            format: elem.format,
-        }));
+        const results = await Templates.find({}).exec();
         res.status(200).json({ message: "OK", data: results });
     } catch (err) {
         res.status(500).json({ message: err });
