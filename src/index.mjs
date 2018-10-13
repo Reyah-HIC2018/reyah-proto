@@ -15,10 +15,11 @@ app.use(body_parser.urlencoded({ extended: false }));
 app.use(body_parser.json());
 
 
-app.use('/models', model_route);
-app.use('/generate', generate_route);
-
+app.use("/models", model_route);
+app.use("/generate", generate_route);
+app.use("/static", express.static("static"));
 app.get(/^\/(?:index(?:.html?)?)?\/?$/, async (req, res) => {
+    res.setHeader("Content-Type", "text/html");
     res.end("Reyah prototype.");
 });
 
