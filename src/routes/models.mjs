@@ -29,6 +29,9 @@ router.put('/:name', async (req, res) => {
 router.post('/:name', async (req, res) => {
     const { template, metadata: fields } = req.body;
     const { name } = req.params;
+
+    console.log(req.body);
+
     if (!template || !fields || !name)
         return res.status(400).json({ message: "Missing data" });
     try {

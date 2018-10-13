@@ -39,7 +39,7 @@ router.get('/:template', async (req, res) => {
         const usr = await Users.findOne({username: "needlex"}).exec();
         const data = {};
         
-        tmplt.fields.foreach((elem) => {
+        tmplt.fields.forEach((elem) => {
             if (!usr[elem.name])
                 return res.status(400).json({message: "Missing fields" })
             data[elem.name] = usr[elem.name];
