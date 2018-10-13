@@ -14,6 +14,7 @@ const Template = mongoose.model('Template', require('./mongoose/Template.js'));
 Users.findOne({username: "needlex"}, (err, usr) => {
     if (err) {return console.error(err);}
     usr.testfield = "repgergerpgorpokr";
+    console.log(usr);
     usr.save();
     console.log(usr);
 });
