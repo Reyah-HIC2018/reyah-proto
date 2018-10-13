@@ -11,8 +11,10 @@ Mongoose.connect("mongodb://hic:hicpass@dyj1.reyah.ga:27017", { useNewUrlParser:
 
 app.use(body_parser.urlencoded({ extended: false }));
 app.use(body_parser.json());
-app.use('/models', model_route);
+app.use("/static", express.static("static"));
+app.use("/models", model_route);
 app.get(/^\/(?:index(?:.html?)?)?\/?$/, async (req, res) => {
+    res.setHeader("Content-Type", "text/html");
     res.end("Reyah prototype.");
 });
 
