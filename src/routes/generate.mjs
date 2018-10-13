@@ -32,13 +32,14 @@ async function imageFill(template, data, output) {
 
 
 router.get('/:id', async (req, res) => {
-    const {template} = req.body;
+    const {id} = req.params;
 
     try {
         const tmplt = await Templates.findById(id).exec();
         const usr = await Data.find({}).exec();
         const data = {};
         
+        //https://stackoverflow.com/questions/17546953/cant-access-object-property-even-though-it-exists-returns-undefined
         tmplt.fields.forEach((elem) => {
             if (!usr[elem.name])
                 return res.status(400).json({message: "Missing fields" })

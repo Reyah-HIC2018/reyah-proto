@@ -10,8 +10,9 @@ const read_dir = promisify(readdir);
 
 export const router = express.Router();
 
-router.put("/:name", async (req, res) => {
+router.put("/:id", async (req, res) => {
     const { data } = req.body;
+    console.log(data, req.body);
     if (data == undefined)
         return res.status(400).json({ message: "Missing data" });
     try {
