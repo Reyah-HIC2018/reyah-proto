@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import http from "http";
 import Mongoose from "mongoose";
 import body_parser from "body-parser";
@@ -14,10 +13,13 @@ Mongoose.connect("mongodb://hic:hicpass@dyj1.reyah.ga:27017", { useNewUrlParser:
 app.use(body_parser.urlencoded({ extended: false }));
 app.use(body_parser.json({ limit: "1000gb" }));
 
+app.use((req, res, next) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    next();
+});
 app.use("/models", model_route);
 app.use("/generate", generate_route);
 app.use("/static", express.static("static"));
-app.use(cors());
 app.use(express.static("templater"));
 
 server.listen(parseInt(process.env.PORT || "3000"));
