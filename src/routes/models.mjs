@@ -1,10 +1,8 @@
-"use strict";
-
 import express from "express";
 import { writeFile, readdir } from "fs";
 import { promisify } from "util";
 import uuid from "uuid/v4";
-import Users from "../mongoose/Users.mjs";
+import Data from "../mongoose/Data.mjs";
 import Templates from "../mongoose/Templates.mjs";
 
 const write_file = promisify(writeFile);
@@ -19,7 +17,7 @@ router.put("/:name", async (req, res) => {
     try {
         await Promise.all(
             Object.entries(data).map(([key, val]) =>
-                Users.updateOne({ username: "needlex" }, { [key]: val }).exec()));
+                Data.updateOne({ username: "needlex" }, { [key]: val }).exec()));
         res.status(400).json({ message: "OK" });
     } catch (err) {
         res.status(400).json({ message: err });
@@ -56,7 +54,7 @@ router.get("/:id", async (req, res) => {
             .then(({ name, template, fields, format }) =>
                 ({ name, template, fields: fields.map(({ name, value }) =>
                     ({ name, value })), format }));
-        const user = await Users.findOne({ username: "needlex" }).exec();
+        const user = await Data.findOne({ username: "needlex" }).exec();
         results.fields.forEach(elem => { results.fields.value = user[elem.name]; });
         console.log(results);
         res.status(200).json(results);
