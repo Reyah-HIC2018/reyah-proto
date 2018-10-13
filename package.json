@@ -19,7 +19,8 @@
     "dependencies": {
         "body-parser": "^1.18.3",
         "express": "^4.16.4",
-        "mongoose": "^5.3.3"
+        "mongoose": "^5.3.3",
+        "uuid": "^3.3.2"
     },
     "engines": {
         "node": "10.11.0",

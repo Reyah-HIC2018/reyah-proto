@@ -1,6 +1,12 @@
 import express from "express";
+import { writeFile, readdir } from "fs";
+import { promisify } from "util";
+import uuid from "uuid/v4";
 import Users from "../mongoose/Users.mjs";
 import Templates from "../mongoose/Templates.mjs";
+
+const write_file = promisify(writeFile);
+const read_dir = promisify(readdir);
 
 export const router = express.Router();
 
@@ -21,15 +27,21 @@ router.put('/:name', async (req, res) => {
 });
 
 router.post('/:name', async (req, res) => {
-    const { template, metadata } = req.body;
-    if (!template || !metadata)
+    const { template, fields } = req.body;
+    const { name } = req.params;
+    if (!template || !fields || !name)
         return res.status(400).json({ message: "Missing data" });
     try {
-        await Templates.create({
-            name: req.params.name,
-            Templates: req.body.template,
-            fields: req.body.metadata
-        });
+        const files = await read_dir("../../static");
+        const path = (() => {
+            let path;
+            do {
+                path = `${uuid()}.jpg`;
+            } while (files.includes(path));
+            return path;
+        })();
+        await write_file(`../../static/${path}`, template);
+        await Templates.create({ name, path, fields });
         res.status(200).json({ message: "OK" });
     } catch (err) {
         res.status(500).json({ message: err });
@@ -41,7 +53,7 @@ router.get('/:name', async (req, res) => {
         const found = await Templates.findOne({ name: req.params.name }).exec();
         const result = {
             name: found.name,
-            Templates: found.Templates,
+            template: found.template,
             format: found.format,
             fields: found.fields
         }
