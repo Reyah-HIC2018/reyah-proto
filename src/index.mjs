@@ -1,10 +1,9 @@
 import express from "express";
 import http from "http";
-import Mongoose from 'mongoose';
-import body_parser from 'body-parser';
+import Mongoose from "mongoose";
+import body_parser from "body-parser";
 import model_route from "./routes/models.mjs";
 import generate_route from "./routes/generate.mjs";
-import Users from "./mongoose/Users.mjs";
 
 const app = express();
 const server = http.createServer(app);
