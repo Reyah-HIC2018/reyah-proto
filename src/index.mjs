@@ -18,6 +18,6 @@ app.use(body_parser.json());
 app.use("/models", model_route);
 app.use("/generate", generate_route);
 app.use("/static", express.static("static"));
-app.get(/^\/(?:index(?:.html?)?)?\/?$/, express.static("templater"));
+app.use(express.static("templater"));
 
 server.listen(parseInt(process.env.PORT || "3000"));
