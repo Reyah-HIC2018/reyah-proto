@@ -8,4 +8,4 @@ app.get(/^\/(?:index(?:.html?)?)?\/?$/, async (req, res) => {
     res.end("Reyah prototype.");
 });
 
-server.listen(parseInt(process.env.PORT || 3000));
+server.listen(parseInt(process.env.PORT || "3000"));
