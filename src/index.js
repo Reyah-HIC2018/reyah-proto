@@ -25,7 +25,7 @@ const Template = mongoose.model('Template', require('./mongoose/Template.js'));
 const router = express.Router();
 
 router.put('/models/:name', async (req, res) => {
-    const data = req.body.data;
+    const { data } = req.body;
     try {
         const user = await Users.findOne({ username: "needlex" }).exec();
         Object.assign(user, data);
