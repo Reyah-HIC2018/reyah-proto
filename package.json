@@ -19,6 +19,7 @@
     "homepage": "https://github.com/Reyah-HIC2018/reyah-proto#readme",
     "dependencies": {
         "body-parser": "^1.18.3",
+        "cors": "^2.8.4",
         "express": "^4.16.4",
         "jimp": "^0.5.4",
         "mongoose": "^5.3.3",
