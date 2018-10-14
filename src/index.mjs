@@ -15,6 +15,7 @@ app.use(body_parser.json({ limit: "1000gb" }));
 
 app.use((req, res, next) => {
     res.set('Access-Control-Allow-Origin', '*');
+    res.set('Access-Control-Allow-Methods', '*');
     next();
 });
 app.use("/models", model_route);
