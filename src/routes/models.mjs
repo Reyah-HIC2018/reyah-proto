@@ -36,13 +36,13 @@ router.post("/:name", async (req, res) => {
         const path = (() => {
             let path;
             do {
-                path = `/static/${uuid()}.jpg`;
+                path = uuid();
             } while (files.includes(path));
             return path;
         })();
-        await write_file(`static/${path}`, Buffer.from(template.split(",")[1], "base64"));
-        await Templates.create({ name, path, fields, format: "jpg" });
-        res.status(200).json({ name, path, fields, format: "jpg" });
+        await write_file(`static/${path}.jpg`, Buffer.from(template.split(",")[1], "base64"));
+        await Templates.create({ name, path: `static/${path}`, fields, format: "jpg" });
+        res.status(200).json({ name, path: `static/${path}`, fields, format: "jpg" });
     } catch (err) {
         res.status(500).json({ error: err });
     }
@@ -53,7 +53,7 @@ router.get("/:id", async (req, res) => {
     try {
         const results = await Templates.findById(id).exec()
             .then(({ name, path, fields, format }) =>
-                ({ name, path, fields: fields.map(({ name, value }) =>
+                ({ name, path, thumb: `${path}_thumb`, fields: fields.map(({ name, value }) =>
                     ({ name, value })), format }));
         const user = await Data.find({  }).exec();
         results.fields.forEach(elem => {
@@ -71,7 +71,7 @@ router.get("/", async (req, res) => {
     try {
         const data = await Templates.find({}).exec()
             .then(arr => arr.map(({ name, template, format, path, _id }) =>
-                ({ name, template, format, path, id: _id })));
+                ({ name, template, format, path, thumb: `${path}_thumb`, id: _id })));
         res.status(200).json({ data });
     } catch (err) {
         res.status(500).json({ error: err });
