@@ -1,4 +1,6 @@
 import express from "express";
+import Jimp from "jimp";
+import path from "path";
 import { writeFile, readdir } from "fs";
 import { promisify } from "util";
 import uuid from "uuid/v4";
@@ -59,6 +61,7 @@ router.post("/:name", async (req, res) => {
         await Templates.create({ name, path: `static/${path}`, fields, format: "jpg" });
         res.status(200).json({ name, path: `static/${path}`, fields, format: "jpg" });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: err });
     }
 });
