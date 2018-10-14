@@ -10,7 +10,7 @@ async function imageFill(template, data, output) {
     return new Promise((resolve, reject) => {
         Jimp.read(`${config.templates_folder}/${template.path}`, async (err, file) => {
             if (err) 
-                throw err;
+                reject(err);
             font = await Jimp.loadFont(config.font);
             for (let field of template.metadata) {
                 let profile_elem = data.find((metadata) => {
@@ -29,7 +29,6 @@ async function imageFill(template, data, output) {
         });
     });
 }
-
 
 router.get('/:id', async (req, res) => {
     const {id} = req.params;

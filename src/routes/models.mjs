@@ -10,6 +10,20 @@ const read_dir = promisify(readdir);
 
 export const router = express.Router();
 
+
+async function genThumb(file_path) {
+    return new Promise((resolve, reject) => {
+        Jimp.read(file_path, async (err, file) => {
+            if (err)
+                reject(err);
+            const thumb = path.parse(file_path);
+            file.resize(210, 297).write(path.join(thumb.dir, thumb.name + '_thumb' + thumb.ext));     
+            resolve();
+        });
+    });
+}
+
+
 router.put("/:id", async (req, res) => {
     const { data } = req.body;
     console.log(data, req.body);
@@ -41,6 +55,7 @@ router.post("/:name", async (req, res) => {
             return path;
         })();
         await write_file(`static/${path}`, Buffer.from(template.split(",")[1], "base64"));
+        await genThumb(`static/${path}`);
         await Templates.create({ name, path, fields, format: "jpg" });
         res.status(200).json({ name, path, fields, format: "jpg" });
     } catch (err) {
