@@ -1,6 +1,7 @@
 const express = require("express");
 const http = require("http");
-var Jimp = require('jimp');
+const Jimp = require("jimp");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
@@ -74,6 +75,19 @@ const data_model = [
     {field: "téléphone perso du père", value: "06 86 23 14 98"}
 ]
 
+
+async function genThumb(file_path) {
+    return new Promise((resolve, reject) => {
+        Jimp.read(file_path, async (err, file) => {
+            if (err) 
+                throw err;
+            const thumb = path.parse(file_path);
+            file.resize(210, 297).write(path.join(thumb.dir, thumb.name + '_thumb' + thumb.ext));     
+            resolve();
+        });
+    });
+}
+
 async function imageFill(template, data, output) {
     return new Promise((resolve, reject) => {
         Jimp.read(`${config.templates_folder}/${template.path}`, async (err, file) => {
@@ -101,7 +115,7 @@ async function imageFill(template, data, output) {
 app.get(/^\/(?:index(?:.html?)?)?\/?$/, async (req, res) => {
     await imageFill(template_model, data_model, "public/save.jpg");
     res.setHeader("Content-Type", "text/html")
-    res.send("<html><img src='save.jpg'> </html>");
+    res.send("<html><img src='save.jpg'><<img src='save_thumb.jpg'>> </html>");
 });
 
 server.listen(parseInt(process.env.PORT || "3000"));
