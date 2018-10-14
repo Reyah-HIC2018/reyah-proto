@@ -48,11 +48,11 @@ router.get('/:id', async (req, res) => {
         });
 
         console.log(tmplt);
-        imageFill(tmplt, data, path.join("../static", tmplt.name + '_filled.jpg')); 
-        res.redirect(path.join("../static", tmplt.name + '_filled.jpg'));
+        imageFill(tmplt, data, path.join("static", tmplt.name + '_filled.jpg'));
+        res.redirect(path.join("/static", tmplt.name + '_filled.jpg'));
     } catch(err) {
         console.log(err);
-        res.status(404).json({message: "Unknown model", path: path.join(__dirname, "..", tmplt.name + '_filled.jpg')})
+        res.status(404).json({message: "Unknown model", path: path.join("/static", tmplt.name + '_filled.jpg')})
     }
     
 });
