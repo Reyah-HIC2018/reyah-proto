@@ -72,10 +72,11 @@ router.get("/:id", async (req, res) => {
             .then(({ name, path, fields, format }) =>
                 ({ name, path: `${path}.${format}`, thumb: `${path}_thumb.${format}`, fields: fields.map(({ name, value }) =>
                     ({ name, value })), format }));
-        const user = await Data.find({  }).exec();
+        let user = (await Data.find({  }).exec())[0];
+        user = JSON.parse(JSON.stringify(user));
         results.fields.forEach(elem => {
-            if (elem.name in user)
-                results.fields.value = user[elem.name];
+            if (user[elem.name])
+                elem.value = user[elem.name];
         });
         res.status(200).json(results);
     } catch (err) {
