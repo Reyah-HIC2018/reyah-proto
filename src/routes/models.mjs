@@ -17,10 +17,10 @@ async function genThumb(file_path) {
     return new Promise((resolve, reject) => {
         Jimp.read(file_path, async (err, file) => {
             if (err)
-                reject(err);
+                return reject(err);
             const thumb = path.parse(file_path);
             file.resize(210, 297).write(path.join(thumb.dir, thumb.name + '_thumb' + thumb.ext));     
-            resolve();
+            return resolve();
         });
     });
 }

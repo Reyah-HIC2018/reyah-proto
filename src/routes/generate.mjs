@@ -10,7 +10,7 @@ async function imageFill(template, data, output) {
     return new Promise((resolve, reject) => {
         Jimp.read(`${template.path}`, async (err, file) => {
             if (err) 
-                reject(err);
+                return reject(err);
             const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
             for (let field of template.fields) {
                 if (data[field.name]) {
@@ -22,7 +22,7 @@ async function imageFill(template, data, output) {
                 }
             }
             file.write(output);
-            resolve();
+            return resolve();
         });
     });
 }
