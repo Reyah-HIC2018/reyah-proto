@@ -25,7 +25,6 @@ async function genThumb(file_path) {
     });
 }
 
-
 router.put("/:id", async (req, res) => {
     const { data } = req.body;
     console.log(data, req.body);

@@ -29,8 +29,8 @@ async function imageFill(template, data, output) {
 
 router.get('/:id', async (req, res) => {
     const {id} = req.params;
-
     try {
+
         const tmplt = await Templates.findById(id).exec();
         const usr = JSON.parse(JSON.stringify(await Data.find({}).exec()));
         const data = [];
