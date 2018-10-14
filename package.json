@@ -4,7 +4,7 @@
     "description": "",
     "main": "src/index.mjs",
     "scripts": {
-        "start": "nodemon --experimental-modules .",
+        "start": "node --experimental-modules .",
         "lint": "eslint . --ext mjs"
     },
     "repository": {
