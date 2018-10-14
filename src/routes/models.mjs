@@ -68,7 +68,7 @@ router.get("/:id", async (req, res) => {
     try {
         const results = await Templates.findById(id).exec()
             .then(({ name, path, fields, format }) =>
-                ({ name, path, thumb: `${path}_thumb`, fields: fields.map(({ name, value }) =>
+                ({ name, path: `${path}.${format}`, thumb: `${path}_thumb.${format}`, fields: fields.map(({ name, value }) =>
                     ({ name, value })), format }));
         const user = await Data.find({  }).exec();
         results.fields.forEach(elem => {
@@ -86,7 +86,7 @@ router.get("/", async (req, res) => {
     try {
         const data = await Templates.find({}).exec()
             .then(arr => arr.map(({ name, template, format, path, _id }) =>
-                ({ name, template, format, path, thumb: `${path}_thumb`, id: _id })));
+                ({ name, template, format, path: `${path}.${format}`, thumb: `${path}_thumb.${format}`, id: _id })));
         res.status(200).json({ data });
     } catch (err) {
         res.status(500).json({ error: err });
