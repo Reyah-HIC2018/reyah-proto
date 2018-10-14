@@ -30,14 +30,15 @@ router.get('/:id', async (req, res) => {
 
     try {
         const tmplt = await Templates.findById(id).exec();
-        const usr = JSON.parse(JSON.stringify(await Data.find({}).exec()));
+        const usr = JSON.parse(JSON.stringify(await Data.findOne({}).exec()));
         const data = {};
 
         tmplt.path = tmplt.path + "." + tmplt.format;
-        tmplt.fields.forEach((elem) => {
-            if (!usr[0][elem.name])
+        tmplt.fields.forEach(elem => {
+            const found = usr.fields.find(el => el.name == elem.name);
+            if (found == undefined)
                 return res.status(400).json({message: "Missing fields", usr: usr })
-            data[elem.name] = usr[0][elem.name];
+            data[found.name] = found.value;
         });
 
         await imageFill(tmplt, data, path.join("static", tmplt.name + '_filled.jpg'));
