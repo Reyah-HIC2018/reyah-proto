@@ -31,7 +31,8 @@ router.put("/:id", async (req, res) => {
 
     try {
         await Promise.all(
-            data.fields.map(({ name, value }) => Data.updateOne({}, { [name]: value }).exec()));
+            Object.entries(data).map(([key, val]) =>
+                Data.updateOne({}, { [key]: val }).exec()));
         res.status(200).json(data);
     } catch (error) {
         res.status(400).json({ error });
