@@ -33,26 +33,19 @@ router.get('/:id', async (req, res) => {
 
         const tmplt = await Templates.findById(id).exec();
         const usr = JSON.parse(JSON.stringify(await Data.find({}).exec()));
-        const data = [];
+        const data = {};
 
+        tmplt.path = tmplt.path + "." + tmplt.format;
         tmplt.fields.forEach((elem) => {
             if (!usr[0][elem.name])
                 return res.status(400).json({message: "Missing fields", usr: usr })
-            const obj = {};
-            obj[data[elem.name]] = usr[0][elem.name];
-            obj.x1 = elem.x1;
-            obj.x2 = elem.x2;
-            obj.y1 = elem.y1;
-            obj.y2 = elem.y2;
-            data.push(obj);
+            data[elem.name] = usr[0][elem.name];
         });
 
-        console.log(tmplt);
-        imageFill(tmplt, data, path.join("static", tmplt.name + '_filled.jpg'));
+        await imageFill(tmplt, data, path.join("static", tmplt.name + '_filled.jpg'));
         res.redirect(path.join("/static", tmplt.name + '_filled.jpg'));
     } catch(err) {
-        console.log(err);
-        res.status(404).json({message: "Unknown model", path: path.join("/static", tmplt.name + '_filled.jpg')})
+        res.status(404).json({message: "Unknown model", path: path.join("/static", tmplt.name)})
     }
     
 });
