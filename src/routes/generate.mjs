@@ -30,7 +30,6 @@ async function imageFill(template, data, output) {
     });
 }
 
-
 router.get('/:id', async (req, res) => {
     const {id} = req.params;
 
