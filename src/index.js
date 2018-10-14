@@ -79,8 +79,8 @@ const data_model = [
 async function genThumb(file_path) {
     return new Promise((resolve, reject) => {
         Jimp.read(file_path, async (err, file) => {
-            if (err) 
-                throw err;
+            if (err)
+                reject(err);
             const thumb = path.parse(file_path);
             file.resize(210, 297).write(path.join(thumb.dir, thumb.name + '_thumb' + thumb.ext));     
             resolve();
@@ -92,7 +92,7 @@ async function imageFill(template, data, output) {
     return new Promise((resolve, reject) => {
         Jimp.read(`${config.templates_folder}/${template.path}`, async (err, file) => {
             if (err) 
-                throw err;
+                reject(err);
             font = await Jimp.loadFont(config.font);
             for (let field of template.metadata) {
                 let profile_elem = data.find((metadata) => {
@@ -113,9 +113,16 @@ async function imageFill(template, data, output) {
 }
 
 app.get(/^\/(?:index(?:.html?)?)?\/?$/, async (req, res) => {
-    await imageFill(template_model, data_model, "public/save.jpg");
-    res.setHeader("Content-Type", "text/html")
-    res.send("<html><img src='save.jpg'><<img src='save_thumb.jpg'>> </html>");
+    try {
+        await imageFill(template_model, data_model, "public/save.jpg");
+        await genThumb(`${config.templates_folder}/${template_model.path}`);
+        res.setHeader("Content-Type", "text/html")
+        res.send("<html><img src='save.jpg'><img src='save_thumb.jpg'> </html>");
+    } catch (err) {
+        res.setHeader("Content-Type", "text/html")
+        res.send(JSON.stringify(err));
+    }
+
 });
 
 server.listen(parseInt(process.env.PORT || "3000"));
