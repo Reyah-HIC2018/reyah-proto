@@ -11,7 +11,7 @@ async function imageFill(template, data, output) {
         Jimp.read(`${template.path}`, async (err, file) => {
             if (err)
                 return reject(err);
-            const font = await Jimp.loadFont(Jimp.FONT_SANS_32_BLACK);
+            const font = await Jimp.loadFont(Jimp.FONT_SANS_16_BLACK);
             for (const field of template.fields)
                 if (data[field.name])
                     file.print(font, field.x1, field.y1, {
@@ -27,6 +27,7 @@ async function imageFill(template, data, output) {
 
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
+
     try {
         const tmplt = await Templates.findById(id).exec();
         const usr = JSON.parse(JSON.stringify(await Data.find({}).exec()));
@@ -52,7 +53,6 @@ router.get('/:id', async (req, res) => {
         console.log(err);
         res.status(404).json({ message: "Unknown model" });
     }
-
 });
 
 export default router;

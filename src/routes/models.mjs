@@ -27,7 +27,8 @@ async function genThumb(file_path) {
 router.put("/:id", async (req, res) => {
     const { data } = req.body;
     if (data == undefined)
-        return res.status(400).json({ error: "missing data" });
+        return res.status(400).json({ error: "Missing data" });
+
     try {
         await Promise.all(
             Object.entries(data).map(([key, val]) =>
@@ -67,31 +68,40 @@ router.get("/:id", async (req, res) => {
     const { id } = req.params;
     try {
         const results = await Templates.findById(id).exec()
-            .then(({ name, path, fields, format }) =>
-                ({
-                    name, path: `${path}.${format}`, thumb: `${path}_thumb.${format}`, fields: fields.map(({ name, value }) =>
-                        ({ name, value })), format
-                }));
+            .then(({ name, path, fields, format }) => ({
+                name,
+                format,
+                path: `${path}.${format}`,
+                thumb: `${path}_thumb.${format}`,
+                fields: fields.map(({ name, value }) => ({ name, value }))
+            }));
         const user = JSON.parse(JSON.stringify((await Data.find({}).exec())[0]));
         results.fields.forEach(elem => {
             if (user[elem.name])
                 elem.value = user[elem.name];
         });
         res.status(200).json(results);
-    } catch (err) {
-        console.error(err);
-        res.status(404).json({ error: "resource not found" });
+    } catch (error) {
+        console.error(error);
+        res.status(404).json({ error });
     }
 });
 
 router.get("/", async (req, res) => {
     try {
         const data = await Templates.find({}).exec()
-            .then(arr => arr.map(({ name, template, format, path, _id }) =>
-                ({ name, template, format, path: `${path}.${format}`, thumb: `${path}_thumb.${format}`, id: _id })));
+            .then(arr =>
+                arr.map(({ name, template, format, path, _id }) => ({
+                    id: _id,
+                    name,
+                    template,
+                    format,
+                    path: `${path}.${format}`,
+                    thumb: `${path}_thumb.${format}`
+                })));
         res.status(200).json({ data });
-    } catch (err) {
-        res.status(500).json({ error: err });
+    } catch (error) {
+        res.status(500).json({ error });
     }
 });
 
